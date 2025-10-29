@@ -24,7 +24,7 @@ echo -e "\n${YELLOW}Checking prerequisites...${NC}"
 command -v java >/dev/null 2>&1 || { echo -e "${RED}✗ Java is not installed${NC}"; exit 1; }
 echo -e "${GREEN}✓ Java found: $(java -version 2>&1 | head -n 1)${NC}"
 
-command -v mvn >/dev/null 2>&1 || { echo -e "${RED}✗ Maven is not installed${NC}"; exit 1; }
+command -v ./mvnw >/dev/null 2>&1 || { echo -e "${RED}✗ Maven is not installed${NC}"; exit 1; }
 echo -e "${GREEN}✓ Maven found: $(mvn -version | head -n 1)${NC}"
 
 command -v docker >/dev/null 2>&1 || { echo -e "${RED}✗ Docker is not installed${NC}"; exit 1; }
