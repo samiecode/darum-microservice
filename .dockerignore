@@ -1,0 +1,16 @@
+target/
+.mvn/
+*.iml
+.idea/
+.vscode/
+.DS_Store
+*.log
+*.tmp
+.git/
+.github/
+*.md
+docker-compose*.yml
+Dockerfile
+.dockerignore
+k8s/
+scripts/

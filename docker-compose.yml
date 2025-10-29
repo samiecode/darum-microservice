@@ -1,0 +1,205 @@
+version: "3.8"
+
+services:
+    discovery-service:
+        build:
+            context: ./discovery-service
+            dockerfile: Dockerfile
+        container_name: discovery-service
+        ports:
+            - "8761:8761"
+        networks:
+            - darum-network
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "wget",
+                    "--spider",
+                    "-q",
+                    "http://localhost:8761/actuator/health",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 60s
+
+    config-server:
+        build:
+            context: ./config-server
+            dockerfile: Dockerfile
+        container_name: config-server
+        ports:
+            - "8888:8888"
+        networks:
+            - darum-network
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+        depends_on:
+            discovery-service:
+                condition: service_healthy
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "wget",
+                    "--spider",
+                    "-q",
+                    "http://localhost:8888/actuator/health",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 60s
+
+    postgres-auth:
+        image: postgres:16-alpine
+        container_name: postgres-auth
+        environment:
+            POSTGRES_DB: auth_db
+            POSTGRES_USER: ${DB_USER:-darum}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-darum123}
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres-auth-data:/var/lib/postgresql/data
+        networks:
+            - darum-network
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-darum}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    postgres-employee:
+        image: postgres:16-alpine
+        container_name: postgres-employee
+        environment:
+            POSTGRES_DB: employee_db
+            POSTGRES_USER: ${DB_USER:-darum}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-darum123}
+        ports:
+            - "5433:5432"
+        volumes:
+            - postgres-employee-data:/var/lib/postgresql/data
+        networks:
+            - darum-network
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-darum}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    auth-service:
+        build:
+            context: ./auth-service
+            dockerfile: Dockerfile
+        container_name: auth-service
+        ports:
+            - "8081:8080"
+        networks:
+            - darum-network
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-auth:5432/auth_db
+            - SPRING_DATASOURCE_USERNAME=${DB_USER:-darum}
+            - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-darum123}
+            - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+            - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+        depends_on:
+            postgres-auth:
+                condition: service_healthy
+            config-server:
+                condition: service_healthy
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "wget",
+                    "--spider",
+                    "-q",
+                    "http://localhost:8080/actuator/health",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 60s
+
+    employee-service:
+        build:
+            context: ./employee-service
+            dockerfile: Dockerfile
+        container_name: employee-service
+        ports:
+            - "8082:8080"
+        networks:
+            - darum-network
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-employee:5432/employee_db
+            - SPRING_DATASOURCE_USERNAME=${DB_USER:-darum}
+            - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-darum123}
+            - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+            - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+        depends_on:
+            postgres-employee:
+                condition: service_healthy
+            config-server:
+                condition: service_healthy
+            auth-service:
+                condition: service_healthy
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "wget",
+                    "--spider",
+                    "-q",
+                    "http://localhost:8080/actuator/health",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 60s
+
+    api-gateway:
+        build:
+            context: ./api-gateway
+            dockerfile: Dockerfile
+        container_name: api-gateway
+        ports:
+            - "8080:8080"
+        networks:
+            - darum-network
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+        depends_on:
+            auth-service:
+                condition: service_healthy
+            employee-service:
+                condition: service_healthy
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "wget",
+                    "--spider",
+                    "-q",
+                    "http://localhost:8080/actuator/health",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 60s
+
+networks:
+    darum-network:
+        driver: bridge
+
+volumes:
+    postgres-auth-data:
+    postgres-employee-data:
