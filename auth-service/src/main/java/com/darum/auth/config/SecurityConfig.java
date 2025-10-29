@@ -24,7 +24,8 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
             "/api/v1/auth/login",
-            "/api/v1/auth/docs/**"
+            "/api/v1/auth/docs/**",
+            "/actuator/**"
     };
 
     private final AuthenticationProvider authenticationProvider;

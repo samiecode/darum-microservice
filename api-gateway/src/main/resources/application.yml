@@ -23,15 +23,6 @@ spring:
               predicates:
                 - Path=/api/v1/employees/**
 
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-  endpoints:
-    web:
-      exposure:
-        include: refresh, health, info
-
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
