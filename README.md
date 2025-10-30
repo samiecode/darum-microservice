@@ -248,18 +248,14 @@ darum-microservice/
 Create a `.env` file (see `.env.example`):
 
 ```bash
-DB_USER=darum
-DB_PASSWORD=darum123
-REGISTRY=ghcr.io
-IMAGE_TAG=latest
+DATABASE_URL=jdbc:postgresql://localhost:5432/<app_db>
+DATABASE_PASSWORD=your_password
+DATABASE_USERNAME=your_username
+
+JWT_SECRET=your_jwt_secret_key
+JPA_SHOW_SQL=true
+JPA_DDL_AUTO=create-drop
 ```
-
-### Application Profiles
-
--   **default**: Local development
--   **docker**: Docker Compose environment
--   **k8s**: Kubernetes environment
--   **test**: Testing with H2 database
 
 ## 📈 Monitoring
 

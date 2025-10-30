@@ -1,5 +1,5 @@
 server:
-  port: 9001
+  port: ${SERVER_PORT:0}
 
 
 spring:
@@ -7,12 +7,6 @@ spring:
     name: auth-service
   config:
     import: optional:configserver:http://localhost:8888
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: refresh
 
 logging:
   level:
