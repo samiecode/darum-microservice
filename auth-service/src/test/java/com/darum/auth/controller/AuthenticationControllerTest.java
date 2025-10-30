@@ -60,7 +60,7 @@ class AuthenticationControllerTest {
     void authenticate_WithValidCredentials_ShouldReturn200() throws Exception {
         // Arrange
         ResponseEntity<ResponseBody<AuthenticationResponse>> response = ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + authResponse.accessToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + authResponse.token())
                 .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
                 .body(ResponseBody.success("Login successfully", authResponse));
 
@@ -73,10 +73,10 @@ class AuthenticationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(header().exists(HttpHeaders.AUTHORIZATION))
                 .andExpect(header().string(HttpHeaders.AUTHORIZATION,
-                        "Bearer " + authResponse.accessToken()))
+                        "Bearer " + authResponse.token()))
                 .andExpect(jsonPath("$.status").value("success"))
                 .andExpect(jsonPath("$.message").value("Login successfully"))
-                .andExpect(jsonPath("$.data.accessToken").value(authResponse.accessToken()))
+                .andExpect(jsonPath("$.data.accessToken").value(authResponse.token()))
                 .andExpect(jsonPath("$.data.expiresAt").exists());
 
         verify(authService, times(1)).authenticate(any(AuthRequest.class));

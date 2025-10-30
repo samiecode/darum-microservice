@@ -106,7 +106,7 @@ class AuthenticationServiceTest {
         assertThat(body.getStatus()).isEqualTo("success");
         assertThat(body.getMessage()).isEqualTo("Login successfully");
         assertThat(body.getData()).isNotNull();
-        assertThat(body.getData().accessToken()).isEqualTo(jwtToken);
+        assertThat(body.getData().token()).isEqualTo(jwtToken);
         assertThat(body.getData().expiresAt()).isEqualTo(expirationDate);
 
         // Verify interactions
@@ -183,7 +183,7 @@ class AuthenticationServiceTest {
         assertThat(body.getStatus()).isEqualTo("success");
         assertThat(body.getMessage()).isEqualTo("User registered successfully");
         assertThat(body.getData()).isNotNull();
-        assertThat(body.getData().accessToken()).isEqualTo(jwtToken);
+        assertThat(body.getData().token()).isEqualTo(jwtToken);
 
         // Verify interactions
         verify(passwordEncoder, times(1)).encode(registerRequest.password());
