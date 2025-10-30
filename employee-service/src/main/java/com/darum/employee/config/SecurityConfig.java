@@ -28,12 +28,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
+    
     @Value("${jwt.secret-key}")
     private String secretKey;
 
     private static final String[] WHITE_LIST_URL = {
             "/api/v1/auth/**",
-            "/api/v1/employees/docs/**"
+            "/api/v1/employees/docs/**",
+            "/actuator/**"
     };
 
     private final DelegatedAuthEntryPoint delegatedAuthEntryPoint;
