@@ -9,7 +9,6 @@ import com.darum.auth.domain.repository.UserRepository;
 import com.darum.auth.jwt.JwtService;
 import com.darum.shareddomain.dto.ResponseBody;
 import com.darum.auth.jwt.SecurityUser;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

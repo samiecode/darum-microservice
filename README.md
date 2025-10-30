@@ -27,7 +27,7 @@ This is a **Spring Cloud-based microservices architecture** for employee and aut
 -   **PostgreSQL 16**
 -   **JWT (io.jsonwebtoken)**
 -   **Flyway** (Database migrations)
--   **Docker & Kubernetes**
+-   **Docker**
 -   **GitHub Actions** (CI/CD)
 
 ## 🚀 Getting Started
@@ -51,7 +51,7 @@ This is a **Spring Cloud-based microservices architecture** for employee and aut
 2. **Build all services**
 
     ```bash
-    mvn clean install
+    mvn clean install -
     ```
 
 3. **Start services with Docker Compose**
@@ -102,42 +102,15 @@ mvn spring-boot:run
 mvn test
 ```
 
-### Run Tests for Specific Service
-
-```bash
-cd auth-service
-mvn test
-
-cd employee-service
-mvn test
-```
-
-### Generate Coverage Report
-
-```bash
-mvn clean test jacoco:report
-```
-
-View reports in `target/site/jacoco/index.html`
-
-### Test Statistics
-
-| Service              | Unit Tests | Integration Tests | Total Coverage |
-| -------------------- | ---------- | ----------------- | -------------- |
-| **auth-service**     | 124+ tests | 10+ tests         | ~80%           |
-| **employee-service** | 165+ tests | 60+ tests         | ~85%           |
-
 ## 🔐 Authentication Flow
 
 1. **Register**: POST `/api/v1/auth/register`
 
     ```json
     {
-    	"firstName": "John",
-    	"lastName": "Doe",
+    	"name": "John Doe",
     	"email": "john@example.com",
     	"password": "SecurePass@123",
-    	"role": "EMPLOYEE"
     }
     ```
 
@@ -232,56 +205,6 @@ docker-compose down
 docker-compose down -v
 ```
 
-## ☸️ Kubernetes Deployment
-
-### Deploy to Kubernetes
-
-```bash
-# Create namespaces
-kubectl apply -f k8s/namespaces.yml
-
-# Deploy databases
-kubectl apply -f k8s/postgres.yml
-
-# Deploy services
-kubectl apply -f k8s/deployments.yml
-
-# Check status
-kubectl get pods -n darum-staging
-kubectl get services -n darum-staging
-```
-
-### Access Services
-
-```bash
-# Port forward to access services locally
-kubectl port-forward -n darum-staging svc/api-gateway 8080:80
-kubectl port-forward -n darum-staging svc/discovery-service 8761:8761
-```
-
-## 🔄 CI/CD Pipeline
-
-The project uses **GitHub Actions** for automated CI/CD. See [CI-CD-SETUP.md](CI-CD-SETUP.md) for details.
-
-### Workflows
-
-1. **CI - Pull Request**: Runs tests and quality checks on every PR
-2. **CD - Deploy**: Deploys to staging/production on merge to main
-3. **Test Coverage**: Generates and reports test coverage
-4. **Dependency Update**: Weekly dependency updates
-
-### Pipeline Features
-
--   ✅ Automated testing (unit + integration)
--   ✅ Code quality analysis (Checkstyle, SpotBugs, SonarCloud)
--   ✅ Security scanning (OWASP Dependency Check)
--   ✅ Test coverage reporting (JaCoCo, Codecov)
--   ✅ Docker image building and pushing
--   ✅ Kubernetes deployment (Blue-Green)
--   ✅ Smoke tests after deployment
--   ✅ Automatic rollback on failure
--   ✅ Slack/Email notifications
-
 ## 📁 Project Structure
 
 ```
@@ -293,14 +216,14 @@ darum-microservice/
 │   ├── src/
 │   │   ├── main/java/
 │   │   │   └── com/darum/auth/
-│   │   └── test/java/       # 124+ tests
+│   │   └── test/java/       # tests
 │   ├── Dockerfile
 │   └── pom.xml
 ├── employee-service/        # Employee management service
 │   ├── src/
 │   │   ├── main/java/
 │   │   │   └── com/darum/employee/
-│   │   └── test/java/       # 165+ tests
+│   │   └── test/java/       # tests
 │   ├── Dockerfile
 │   └── pom.xml
 ├── config-server/           # Spring Cloud Config Server
@@ -315,7 +238,7 @@ darum-microservice/
 │   └── health-check.sh
 ├── docker-compose.yml       # Docker Compose configuration
 ├── pom.xml                  # Parent POM
-└── CI-CD-SETUP.md          # CI/CD documentation
+└── .env.example             # Environment Variable
 ```
 
 ## 🔧 Configuration
@@ -374,42 +297,7 @@ All services expose Spring Boot Actuator endpoints:
 2. Check token expiration
 3. Ensure user exists in database
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Commit changes: `git commit -am 'Add my feature'`
-4. Push to branch: `git push origin feature/my-feature`
-5. Create a Pull Request
-
-### Code Style
-
--   Follow Google Java Style Guide
--   Use Lombok for boilerplate reduction
--   Write comprehensive tests (>80% coverage)
--   Add JavaDoc for public APIs
 
 ## 📄 License
 
 This project is licensed under the MIT License.
-
-## 👥 Team
-
--   **DevOps**: CI/CD, Kubernetes, Monitoring
--   **Backend**: Microservices, APIs, Database
--   **QA**: Testing, Quality Assurance
-
-## 📞 Support
-
--   Create an issue on GitHub
--   Contact: devops@darum.com
--   Documentation: See `docs/` folder
-
-## 🎯 Roadmap
-
--   [ ] Add more microservices (Payroll, Attendance)
--   [ ] Implement distributed tracing (Zipkin/Jaeger)
--   [ ] Add API rate limiting
--   [ ] Implement caching (Redis)
--   [ ] Add GraphQL support
--   [ ] Enhance monitoring (Prometheus + Grafana)
