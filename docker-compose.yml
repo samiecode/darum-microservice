@@ -105,7 +105,7 @@ services:
             - DATABASE_URL=jdbc:postgresql://postgres-auth:5432/auth_db
             - DATABASE_USERNAME=${DATABASE_USERNAME:-darum}
             - DATABASE_PASSWORD=${DATABASE_PASSWORD:-darum123}
-            - JWT_SECRET=${JWT_SECRET:-TESTLSEVvi9OZ+tvWiRcv3BGDY5XCqligZX3rAQP}
+            - JWT_SECRET=${JWT_SECRET:-hCnOa9vlxNaaQ7v63Vr1EdbctIBlvp+PmsbFWCOxkD8=}
             - JPA_SHOW_SQL=${JPA_SHOW_SQL:-true}
             - JPA_DDL_AUTO=${JPA_DDL_AUTO:-create-drop}
             - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -143,7 +143,7 @@ services:
             - DATABASE_URL=jdbc:postgresql://postgres-employee:5432/employee_db
             - DATABASE_USERNAME=${DATABASE_USERNAME:-darum}
             - DATABASE_PASSWORD=${DATABASE_PASSWORD:-darum123}
-            - JWT_SECRET=${JWT_SECRET:-8H8Q4Y6r8UP9pQZvXEzUA5C1zo8E1QtExTFY7kwpLN1WLUrk6sP0BfgP6hEY4Jlg}
+            - JWT_SECRET=${JWT_SECRET:-hCnOa9vlxNaaQ7v63Vr1EdbctIBlvp+PmsbFWCOxkD8=}
             - JPA_SHOW_SQL=${JPA_SHOW_SQL:-true}
             - JPA_DDL_AUTO=${JPA_DDL_AUTO:-create-drop}
             - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
