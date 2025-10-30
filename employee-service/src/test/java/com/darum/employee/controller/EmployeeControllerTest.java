@@ -27,10 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * Integration tests for EmployeeController REST API endpoints.
- * Tests authentication, authorization, validation, and business logic.
- */
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
